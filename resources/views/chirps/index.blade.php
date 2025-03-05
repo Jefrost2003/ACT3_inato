@@ -1,7 +1,7 @@
 <x-app-layout>
     <div class="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
         <!-- Chirp Form -->
-        <form method="POST" action="{{ route('chirps.store') }}" class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
+        <form method="POST" action="{{ route('chirps.store') }}" class="bg-white p-6 rounded-2xl shadow-lg border border-gray-200" hx-post="{{ route('chirps.store') }}" hx-target="#chirps-list" hx-swap="beforeend">
             @csrf
             <textarea
                 name="message"
@@ -15,9 +15,9 @@
         </form>
 
         <!-- Chirps List -->
-        <div class="mt-8 bg-white shadow-lg rounded-2xl divide-y divide-gray-200">
+        <div id="chirps-list" class="mt-8 bg-white shadow-lg rounded-2xl divide-y divide-gray-200">
             @foreach ($chirps as $chirp)
-                <div class="p-6 flex space-x-4 items-start">
+                <div id="chirp-{{ $chirp->id }}" class="p-6 flex space-x-4 items-start">
                     <!-- Twitter Icon -->
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
@@ -44,7 +44,7 @@
                                         <x-dropdown-link :href="route('chirps.edit', $chirp)" class="text-blue-600 hover:bg-blue-100">
                                             {{ __('Edit') }}
                                         </x-dropdown-link>
-                                        <form method="POST" action="{{ route('chirps.destroy', $chirp) }}">
+                                        <form method="POST" action="{{ route('chirps.destroy', $chirp) }}" hx-delete="{{ route('chirps.destroy', $chirp) }}" hx-target="#chirp-{{ $chirp->id }}" hx-swap="outerHTML">
                                             @csrf
                                             @method('delete')
                                             <x-dropdown-link :href="route('chirps.destroy', $chirp)" onclick="event.preventDefault(); this.closest('form').submit();" class="text-red-600 hover:bg-red-100">
